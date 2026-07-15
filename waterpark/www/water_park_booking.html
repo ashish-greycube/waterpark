@@ -243,6 +243,22 @@
     .pkg-name{ font-size:17px; }
     .pkg ul{ font-size:13px; }
   }
+
+  .confirm-top{
+  display:flex; flex-wrap:wrap; align-items:center; justify-content:center;
+  gap:22px; margin-bottom:16px;
+  flex-direction:column; align-items:center;
+}
+.qr-box{ display:flex; flex-direction:column; align-items:center; gap:6px; }
+.qr-img{
+  width:240px; height:240px; border-radius:12px; border:2px solid #E1EEF1;
+  background:#fff; padding:6px;
+}
+.qr-caption{
+  font-size:10.5px; font-weight:800; letter-spacing:.04em;
+  text-transform:uppercase; color:var(--muted);
+}
+.confirm-stamp{ display:flex; flex-direction:column; align-items:center; }
 </style>
 </head>
 <body>
@@ -357,8 +373,16 @@
   </form>
 
   <div class="confirm" id="confirm-panel">
-    <div class="stamp">✓</div>
-    <h2>You're all set!</h2>
+    <div class="confirm-top">
+      <div class="qr-box">
+        <img id="c-qr" class="qr-img" alt="Booking QR code" src="">
+        <span class="qr-caption">Scan at Entry</span>
+      </div>
+      <div class="confirm-stamp">
+        <!-- <div class="stamp">✓</div> -->
+        <h2>You're all set!</h2>
+      </div>
+    </div>
     <p>Your ticket has been booked. Show this confirmation at the entry gate.</p>
     <div class="stub">
       <div class="stub-row"><span>Booking ID</span><span id="c-id"></span></div>
@@ -593,6 +617,7 @@
     document.getElementById("c-total").textContent = "₹" + Number(data.total_amount).toLocaleString("en-IN");
     form.style.display = "none";
     document.getElementById("confirm-panel").classList.add("show");
+    document.getElementById("c-qr").src = data.qr_code;
   }
 
   form.addEventListener("submit", function(e){
@@ -644,6 +669,7 @@
     form.style.display = "block";
     payBtn.disabled = false;
     payBtn.textContent = "Pay & Confirm Booking 🎟️";
+    history.replaceState(null, "", window.location.pathname);
   });
 
   // If Razorpay just redirected back here after a successful payment
@@ -658,6 +684,7 @@
     document.getElementById("c-total").textContent = "₹" + Number(data.total_amount).toLocaleString("en-IN");
     form.style.display = "none";
     document.getElementById("confirm-panel").classList.add("show");
+    document.getElementById("c-qr").src = data.qr_code;
   }
 
   (function initFromRedirect(){

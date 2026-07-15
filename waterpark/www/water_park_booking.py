@@ -79,15 +79,15 @@ def submit_booking(customer_name, mobile_no, booking_date, no_of_persons, packag
 	doc.insert(ignore_permissions=True)
 	doc.submit()  # triggers on_submit() which creates the Payment Request
 	frappe.db.commit()
-	print("Booking request created:", doc.payment_url,"====================================")
+	verify_url = get_url(f"/ticket_verify?booking={doc.name}")
+
 	return {
 		"booking_id": doc.name,
 		"amount_per_person": doc.amount_per_person,
 		"total_amount": doc.total_amount,
-		# "redirect_url": get_url(f"desk/print/Water%20Park%20Booking%20Request/{doc.name}"),
-		"redirect_url": doc.payment_url
+		"redirect_url": doc.payment_url,
+		"qr_code": generate_qr_data_uri(verify_url),
 	}
-
 
 @frappe.whitelist(allow_guest=True)
 def get_booking_confirmation(booking):
@@ -96,6 +96,7 @@ def get_booking_confirmation(booking):
 	payment (see on_payment_request_authorized in the Water Park Booking
 	Request controller)."""
 	doc = frappe.get_doc("Water Park Booking Request", booking)
+	verify_url = get_url(f"/ticket_verify?booking={doc.name}")
 	return {
 		"booking_id": doc.name,
 		"customer_name": doc.customer_name,
@@ -103,4 +104,17 @@ def get_booking_confirmation(booking):
 		"package": "Premium Wave" if doc.premium_wave else "Standard Splash",
 		"no_of_persons": doc.no_of_persons,
 		"total_amount": doc.total_amount,
+		"qr_code": generate_qr_data_uri(verify_url),
 	}
+
+import io
+import pyqrcode
+from frappe.utils import get_url, getdate, nowdate
+
+
+def generate_qr_data_uri(data, scale=6):
+	"""Generate a QR PNG for `data` and return it as a base64 data URI —
+	drop this straight into an <img src="..."> on the frontend."""
+	qr = pyqrcode.create(data)
+	b64 = qr.png_as_base64_str(scale=scale, quiet_zone=2)
+	return f"data:image/png;base64,{b64}"

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ticket Verification</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ocean-deep:#073B4C;
+    --ocean-mid:#0B5C73;
+    --aqua:#01BAEF;
+    --sun:#FFC857;
+    --sand:#FFFBF2;
+    --ink:#073B4C;
+    --muted:#5A7D8C;
+    --error:#E63946;
+    --success:#1E9E7E;
+    --radius:22px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;height:100%;}
+  body{
+    min-height:100vh;
+    font-family:'Nunito Sans', sans-serif;
+    color:var(--ink);
+    /* background:linear-gradient(160deg, var(--ocean-deep) 0%, var(--ocean-mid) 45%, var(--aqua) 100%); */
+    display:flex;
+    padding:24px 16px;
+  }
+  .card{
+    width:100%; max-width:420px; margin:auto;
+    background:var(--sand);
+    border-radius:var(--radius);
+    box-shadow:0 30px 60px -20px rgba(3,30,40,.55);
+    overflow:hidden;
+  }
+  .card-header{
+    background:var(--ocean-deep); color:#fff;
+    padding:26px 28px 22px; text-align:center;
+  }
+  .eyebrow{
+    font-weight:800; letter-spacing:.14em; text-transform:uppercase;
+    font-size:12px; color:var(--sun); margin:0 0 6px;
+  }
+  h1{
+    font-family:'Baloo 2', sans-serif;
+    font-weight:800; font-size:24px; line-height:1.1; margin:0;
+  }
+  .body{ padding:28px; }
+
+  .status{
+    display:flex; align-items:center; gap:10px; justify-content:center;
+    border-radius:14px; padding:14px 16px; margin-bottom:20px; font-weight:800;
+  }
+  .status.ok{ background:#E4F7F1; color:var(--success); }
+  .status.bad{ background:#FDEBEC; color:var(--error); }
+  .status .icon{
+    width:26px; height:26px; border-radius:50%; flex:none;
+    display:flex; align-items:center; justify-content:center; font-size:15px; color:#fff;
+  }
+  .status.ok .icon{ background:var(--success); }
+  .status.bad .icon{ background:var(--error); }
+
+  .stub{
+    text-align:left; background:#fff; border:2px dashed #DCEFF2; border-radius:14px; padding:16px 18px;
+  }
+  .stub-row{ display:flex; justify-content:space-between; padding:6px 0; font-size:13.5px; font-weight:700; }
+  .stub-row span:first-child{ color:var(--muted); font-weight:600; }
+  .stub-row.total span:last-child{ color:var(--ocean-mid); font-size:16px; }
+
+  .error-box{ text-align:center; color:var(--muted); font-weight:600; font-size:14px; }
+</style>
+</head>
+<body>
+
+<main class="card">
+  <div class="card-header">
+    <p class="eyebrow">AquaFun Water Park</p>
+    <h1>Ticket Verification</h1>
+  </div>
+
+  <div class="body">
+    {% if error %}
+      <div class="status bad"><span class="icon">&times;</span> Not Found</div>
+      <div class="error-box">{{ error }}</div>
+    {% else %}
+      {% if booking.is_verified %}
+        <div class="status ok"><span class="icon">&check;</span> Valid Ticket</div>
+      {% else %}
+        <div class="status bad"><span class="icon">!</span> Not Confirmed</div>
+      {% endif %}
+      <div class="stub">
+        <div class="stub-row"><span>Booking ID</span><span>{{ booking.booking_id }}</span></div>
+        <div class="stub-row"><span>Name</span><span>{{ booking.customer_name }}</span></div>
+        <div class="stub-row"><span>Visit Date</span><span>{{ booking.booking_date }}</span></div>
+        <div class="stub-row"><span>Package</span><span>{{ booking.package }}</span></div>
+        <div class="stub-row"><span>Guests</span><span>{{ booking.no_of_persons }}</span></div>
+        <div class="stub-row total"><span>Total Paid</span><span>&#8377;{{ "{:,.0f}".format(booking.total_amount) }}</span></div>
+      </div>
+    {% endif %}
+  </div>
+</main>
+
+</body>
+</html>
