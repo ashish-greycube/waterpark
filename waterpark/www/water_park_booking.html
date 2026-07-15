@@ -310,7 +310,7 @@
           <input type="radio" name="package" value="Standard Splash" checked>
           <div class="card">
             <p class="pkg-name">Standard Splash</p>
-            <p class="pkg-price">₹499 / person</p>
+            <p class="pkg-price">₹899 / person</p>
             <ul>
               <li>All pools &amp; wave pool</li>
               <li>Kids' splash zone</li>
@@ -324,7 +324,7 @@
           <div class="card">
             <span class="badge">POPULAR</span>
             <p class="pkg-name">Premium Wave</p>
-            <p class="pkg-price">₹899 / person</p>
+            <p class="pkg-price">₹1299 / person</p>
             <ul>
               <li>Everything in Standard</li>
               <li>Private cabana + meal voucher</li>
@@ -339,7 +339,7 @@
 
     <div class="total-box">
       <span class="label">Total Payable</span>
-      <span class="amount" id="total-amount">₹499</span>
+      <span class="amount" id="total-amount">₹899</span>
     </div>
 
     <button type="submit" class="pay-btn" id="pay-btn">Pay &amp; Confirm Your Booking 🎟️</button>
@@ -368,11 +368,11 @@
   // Keep in sync with PACKAGE_PRICES on the server -- this is only used
   // for the live total preview, the server always recalculates and is
   // the source of truth for the amount actually charged.
-  var PACKAGE_PRICES = { "Standard Splash": 499, "Premium Wave": 899 };
+  var PACKAGE_PRICES = { "Standard Splash": 899, "Premium Wave": 1299 };
 
   // Replace "your_app" with your app's module name (the inner folder
   // name of your Frappe app, e.g. "greycube").
-  var SUBMIT_URL = "/api/method/your_app.www.water_park_booking.submit_booking";
+  var SUBMIT_URL = "/api/method/waterpark.www.water_park_booking.submit_booking";
 
   var form = document.getElementById("booking-form");
   var banner = document.getElementById("form-banner");
@@ -608,7 +608,12 @@
           payBtn.textContent = "Pay & Confirm Booking 🎟️";
           return;
         }
-        showConfirmation(result.body.message, payload);
+        var data = result.body.message;
+        if (data.redirect_url) {
+          window.location.href = data.redirect_url;
+          return;
+        }
+        showConfirmation(data, payload);
       })
       .catch(function(){
         showBanner("Network error — please check your connection and try again.");
@@ -630,6 +635,33 @@
     payBtn.disabled = false;
     payBtn.textContent = "Pay & Confirm Booking 🎟️";
   });
+
+  // If Razorpay just redirected back here after a successful payment
+  // (?booking=<name>&paid=1, see on_payment_request_authorized), fetch the
+  // booking and show the confirmation panel instead of the empty form.
+  function showConfirmationFromServer(data){
+    document.getElementById("c-id").textContent = data.booking_id;
+    document.getElementById("c-name").textContent = data.customer_name;
+    document.getElementById("c-date").textContent = isoToDMY(data.booking_date);
+    document.getElementById("c-package").textContent = data.package;
+    document.getElementById("c-persons").textContent = data.no_of_persons;
+    document.getElementById("c-total").textContent = "₹" + Number(data.total_amount).toLocaleString("en-IN");
+    form.style.display = "none";
+    document.getElementById("confirm-panel").classList.add("show");
+  }
+
+  (function initFromRedirect(){
+    var params = new URLSearchParams(window.location.search);
+    var bookingId = params.get("booking");
+    if (!bookingId || params.get("paid") !== "1") { return; }
+
+    fetch("/api/method/waterpark.www.water_park_booking.get_booking_confirmation?booking=" + encodeURIComponent(bookingId))
+      .then(function(res){ return res.json(); })
+      .then(function(result){
+        if (result.message) { showConfirmationFromServer(result.message); }
+      })
+      .catch(function(){ /* fall back to showing the empty booking form */ });
+  })();
 
   updateTotal();
 })();

@@ -2,14 +2,14 @@ import re
 
 import frappe
 from frappe import _
-from frappe.utils import getdate, nowdate
+from frappe.utils import getdate, nowdate, get_url
 
 no_cache = 1
 
 # Keep this in sync with PACKAGE_PRICES in the DocType controller
 PACKAGE_PRICES = {
-	"Standard Splash": 499,
-	"Premium Wave": 899,
+	"Standard Splash": 899,
+	"Premium Wave": 1299,
 }
 
 
@@ -46,25 +46,54 @@ def submit_booking(customer_name, mobile_no, booking_date, no_of_persons, packag
 
 	if package not in PACKAGE_PRICES:
 		frappe.throw(_("Please select a package"))
+	
+	if package == "Standard Splash":
+		standard_selected = 1
+		premium_selected = 0
+	elif package == "Premium Wave":
+		standard_selected = 0
+		premium_selected = 1
 
 	doc = frappe.get_doc(
 		{
-			"doctype": "Water Park Booking",
+			"doctype": "Water Park Booking Request",
 			"customer_name": customer_name.strip(),
 			"mobile_no": mobile_no.strip(),
 			"booking_date": booking_date,
 			"no_of_persons": no_of_persons,
-			"package": package,
+			"standard_splash": standard_selected,
+			"premium_wave": premium_selected,
+			
 		}
 	)
 	# Guest has no create-permission on the doctype by design, so we
 	# bypass permissions here -- all real validation already happened
 	# above and again inside Document.validate().
 	doc.insert(ignore_permissions=True)
+	doc.submit()  # triggers on_submit() which creates the Payment Request
 	frappe.db.commit()
-
+	print("Booking request created:", doc.payment_url,"====================================")
 	return {
 		"booking_id": doc.name,
 		"amount_per_person": doc.amount_per_person,
+		"total_amount": doc.total_amount,
+		# "redirect_url": get_url(f"desk/print/Water%20Park%20Booking%20Request/{doc.name}"),
+		"redirect_url": doc.payment_url
+	}
+
+
+@frappe.whitelist(allow_guest=True)
+def get_booking_confirmation(booking):
+	"""Used by water_park_booking.html to repopulate the confirmation panel
+	when the browser is redirected back here after a successful Razorpay
+	payment (see on_payment_request_authorized in the Water Park Booking
+	Request controller)."""
+	doc = frappe.get_doc("Water Park Booking Request", booking)
+	return {
+		"booking_id": doc.name,
+		"customer_name": doc.customer_name,
+		"booking_date": str(doc.booking_date),
+		"package": "Premium Wave" if doc.premium_wave else "Standard Splash",
+		"no_of_persons": doc.no_of_persons,
 		"total_amount": doc.total_amount,
 	}

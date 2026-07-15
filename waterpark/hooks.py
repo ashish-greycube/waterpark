@@ -146,6 +146,12 @@ app_license = "mit"
 # 	}
 # }
 
+doc_events = {
+	"Payment Request": {
+		"on_payment_authorized": "waterpark.waterpark.doctype.water_park_booking_request.water_park_booking_request.on_payment_request_authorized"
+	}
+}
+
 # Scheduled Tasks
 # ---------------
 

@@ -1,0 +1,164 @@
+{
+ "actions": [],
+ "allow_bulk_edit": 1,
+ "allow_rename": 1,
+ "autoname": "WPBR-.####",
+ "creation": "2026-07-14 15:36:59.716002",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_sgrg",
+  "company",
+  "customer_name",
+  "mobile_no",
+  "payment_status",
+  "column_break_qfvs",
+  "booking_date",
+  "no_of_persons",
+  "amount_per_person",
+  "total_amount",
+  "amended_from",
+  "section_break_fdut",
+  "standard_splash",
+  "column_break_rxri",
+  "premium_wave",
+  "section_break_kpjx",
+  "payment_url"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_sgrg",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Water Park Booking Request",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "mobile_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Mobile No.",
+   "options": "Phone",
+   "reqd": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "Unpaid",
+   "fieldname": "payment_status",
+   "fieldtype": "Select",
+   "label": "Payment Status",
+   "options": "\nUnpaid\nPaid"
+  },
+  {
+   "fieldname": "column_break_qfvs",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_fdut",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "standard_splash",
+   "fieldtype": "Check",
+   "label": "Standard Splash"
+  },
+  {
+   "fieldname": "column_break_rxri",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "premium_wave",
+   "fieldtype": "Check",
+   "label": "Premium Wave"
+  },
+  {
+   "fieldname": "no_of_persons",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "No of Persons",
+   "non_negative": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "booking_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Booking Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "amount_per_person",
+   "fieldtype": "Currency",
+   "label": "Amount Per Person"
+  },
+  {
+   "fieldname": "total_amount",
+   "fieldtype": "Currency",
+   "label": "Total Amount",
+   "non_negative": 1
+  },
+  {
+   "fieldname": "customer_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Customer Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_kpjx",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "payment_url",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Payment URL",
+   "read_only": 1
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-07-15 12:31:15.532201",
+ "modified_by": "Administrator",
+ "module": "Waterpark",
+ "name": "Water Park Booking Request",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}
