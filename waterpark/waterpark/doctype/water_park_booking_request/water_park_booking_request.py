@@ -7,6 +7,7 @@ import re
 from frappe import _
 from frappe.utils import getdate, nowdate, get_url
 import json
+import erpnext
 
 # Keep this in sync with the PACKAGE_PRICES map in www/water_park_booking.py
 PACKAGE_PRICES = {
@@ -33,7 +34,7 @@ class WaterParkBookingRequest(Document):
 	def validate_mobile_no(self):
 		# 10-digit Indian mobile number starting 6-9. Adjust the pattern
 		# below if you need to support other country formats.
-		if not re.match(r"^[6-9]\d{9}$", self.mobile_no or ""):
+		if self.is_new() and not re.match(r"^[6-9]\d{9}$", self.mobile_no or ""):
 			frappe.throw(_("Please enter a valid 10-digit mobile number"))
 		if self.mobile_no:
 			## add country code if not present
@@ -65,7 +66,7 @@ class WaterParkBookingRequest(Document):
 		# always failing with "Payment Entry is already created".
 
 		payment_gateway_account = frappe.get_doc("Payment Gateway Account", {
-			"company": self.company,
+			"company": erpnext.get_default_company(),
 			"payment_gateway" : "Razorpay",
 		})
 		payment_request = frappe.new_doc("Payment Request")
@@ -75,7 +76,7 @@ class WaterParkBookingRequest(Document):
 				"reference_doctype": "Water Park Booking Request",
 				"reference_name": self.name,
 				"grand_total": self.total_amount,
-				"company": self.company,
+				"company": erpnext.get_default_company(),
 			}
 		)
 		payment_request.append("payment_reference", {"amount": self.total_amount})
