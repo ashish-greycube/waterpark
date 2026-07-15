@@ -2,13 +2,14 @@ import re
 
 import frappe
 from frappe import _
+import pyqrcode
 from frappe.utils import getdate, nowdate, get_url
 
 no_cache = 1
 
 # Keep this in sync with PACKAGE_PRICES in the DocType controller
 PACKAGE_PRICES = {
-	"Standard Splash": 899,
+	"Standard Splash": 1,
 	"Premium Wave": 1299,
 }
 
@@ -17,6 +18,12 @@ def get_context(context):
 	context.no_cache = 1
 	context.title = "Book Your Water Park Ticket"
 
+def generate_qr_data_uri(data, scale=6):
+	"""Generate a QR PNG for `data` and return it as a base64 data URI —
+	drop this straight into an <img src="..."> on the frontend."""
+	qr = pyqrcode.create(data)
+	b64 = qr.png_as_base64_str(scale=scale, quiet_zone=2)
+	return f"data:image/png;base64,{b64}"
 
 @frappe.whitelist(allow_guest=True)
 def submit_booking(customer_name, mobile_no, booking_date, no_of_persons, package):

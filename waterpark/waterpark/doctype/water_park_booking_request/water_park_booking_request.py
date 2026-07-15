@@ -11,7 +11,7 @@ import erpnext
 
 # Keep this in sync with the PACKAGE_PRICES map in www/water_park_booking.py
 PACKAGE_PRICES = {
-	"standard_splash": 899,
+	"standard_splash": 1,
 	"premium_wave": 1299,
 }
 
