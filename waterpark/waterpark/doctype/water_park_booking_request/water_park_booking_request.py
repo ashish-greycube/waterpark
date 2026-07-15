@@ -7,8 +7,6 @@ import re
 from frappe import _
 from frappe.utils import getdate, nowdate, get_url
 import json
-import erpnext
-from erpnext import get_default_company
 
 # Keep this in sync with the PACKAGE_PRICES map in www/water_park_booking.py
 PACKAGE_PRICES = {
@@ -67,7 +65,7 @@ class WaterParkBookingRequest(Document):
 		# always failing with "Payment Entry is already created".
 
 		payment_gateway_account = frappe.get_doc("Payment Gateway Account", {
-			"company": get_default_company(),
+			"company": self.company,
 			"payment_gateway" : "Razorpay",
 		})
 		payment_request = frappe.new_doc("Payment Request")
@@ -77,7 +75,7 @@ class WaterParkBookingRequest(Document):
 				"reference_doctype": "Water Park Booking Request",
 				"reference_name": self.name,
 				"grand_total": self.total_amount,
-				"company": get_default_company(),
+				"company": self.company,
 			}
 		)
 		payment_request.append("payment_reference", {"amount": self.total_amount})
