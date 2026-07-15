@@ -37,6 +37,10 @@ class WaterParkBookingRequest(Document):
 		# below if you need to support other country formats.
 		if not re.match(r"^[6-9]\d{9}$", self.mobile_no or ""):
 			frappe.throw(_("Please enter a valid 10-digit mobile number"))
+		if self.mobile_no:
+			## add country code if not present
+			if not self.mobile_no.startswith("91"):
+				self.mobile_no = "91" + self.mobile_no
 
 	def validate_no_of_persons(self):
 		if not self.no_of_persons or self.no_of_persons <= 0:
