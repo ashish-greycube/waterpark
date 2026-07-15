@@ -1,0 +1,26 @@
+{
+ "app": "waterpark",
+ "creation": "2026-07-14 16:10:19.684582",
+ "docstatus": 0,
+ "doctype": "Workspace Sidebar",
+ "idx": 0,
+ "items": [
+  {
+   "child": 0,
+   "collapsible": 1,
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "AquaFun",
+   "link_to": "AquaFun",
+   "link_type": "Workspace",
+   "show_arrow": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-07-15 13:26:36.109127",
+ "modified_by": "Administrator",
+ "name": "AquaFun",
+ "owner": "Administrator",
+ "standard": 1,
+ "title": "AquaFun"
+}

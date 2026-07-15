@@ -1,0 +1,67 @@
+{
+ "app": "waterpark",
+ "charts": [],
+ "content": "[{\"id\":\"c--uOx-ftf\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Welcome to the AquaFun workspace</span>\",\"col\":12}},{\"id\":\"gFc-_9aILB\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Water Park Booking\",\"col\":3}},{\"id\":\"iBGJzwvDko\",\"type\":\"card\",\"data\":{\"card_name\":\"Doctypes\",\"col\":4}}]",
+ "creation": "2026-07-14 16:10:19.657445",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "hide_custom": 0,
+ "idx": 0,
+ "indicator_color": "green",
+ "is_hidden": 0,
+ "label": "AquaFun",
+ "link_type": "DocType",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Doctypes",
+   "link_count": 2,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Water Park Booking Request",
+   "link_count": 0,
+   "link_to": "Water Park Booking Request",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Payment Request",
+   "link_count": 0,
+   "link_to": "Payment Request",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-07-15 13:28:26.522563",
+ "modified_by": "Administrator",
+ "module": "Waterpark",
+ "name": "AquaFun",
+ "number_cards": [],
+ "owner": "Administrator",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [],
+ "sequence_id": 0.0,
+ "shortcuts": [
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Water Park Booking",
+   "type": "URL",
+   "url": "/water_park_booking"
+  }
+ ],
+ "title": "AquaFun",
+ "type": "Workspace"
+}
