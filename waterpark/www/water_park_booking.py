@@ -1,9 +1,11 @@
+import io
 import re
 
 import frappe
 from frappe import _
 import pyqrcode
 from frappe.utils import getdate, nowdate, get_url
+from frappe.utils.file_manager import save_file
 
 no_cache = 1
 
@@ -24,6 +26,21 @@ def generate_qr_data_uri(data, scale=6):
 	qr = pyqrcode.create(data)
 	b64 = qr.png_as_base64_str(scale=scale, quiet_zone=2)
 	return f"data:image/png;base64,{b64}"
+
+def save_qr_code_attachment(doc, data, scale=6):
+	"""Generate a QR PNG for `data`, attach it to `doc` as a File, and
+	return the file URL to store in the qr_code (Attach Image) field."""
+	qr = pyqrcode.create(data)
+	buffer = io.BytesIO()
+	qr.png(buffer, scale=scale, quiet_zone=2)
+	file_doc = save_file(
+		f"{doc.name}-qr.png",
+		buffer.getvalue(),
+		doc.doctype,
+		doc.name,
+		is_private=0,
+	)
+	return file_doc.file_url
 
 @frappe.whitelist(allow_guest=True)
 def submit_booking(customer_name, mobile_no, booking_date, no_of_persons, package):
@@ -80,7 +97,8 @@ def submit_booking(customer_name, mobile_no, booking_date, no_of_persons, packag
 	doc.submit()  # triggers on_submit() which creates the Payment Request
 	frappe.db.commit()
 	verify_url = get_url(f"/ticket_verify?booking={doc.name}")
-
+	qr_file_url = save_qr_code_attachment(doc, verify_url)
+	frappe.db.set_value("Water Park Booking Request", doc.name, "qr_code", qr_file_url)
 	return {
 		"booking_id": doc.name,
 		"amount_per_person": doc.amount_per_person,
@@ -97,6 +115,9 @@ def get_booking_confirmation(booking):
 	Request controller)."""
 	doc = frappe.get_doc("Water Park Booking Request", booking)
 	verify_url = get_url(f"/ticket_verify?booking={doc.name}")
+
+	# qr_file_url = save_qr_code_attachment(doc, verify_url)
+	# frappe.db.set_value("Water Park Booking Request", booking, "qr_code", qr_file_url)
 	return {
 		"booking_id": doc.name,
 		"customer_name": doc.customer_name,
