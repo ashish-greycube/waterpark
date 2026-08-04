@@ -148,7 +148,10 @@ app_license = "mit"
 
 doc_events = {
 	"Payment Request": {
-		"on_payment_authorized": "waterpark.waterpark.doctype.water_park_booking_request.water_park_booking_request.on_payment_request_authorized"
+		"on_payment_authorized": [
+			"waterpark.waterpark.doctype.water_park_booking_request.water_park_booking_request.on_payment_request_authorized",
+			"waterpark.waterpark.doctype.shott_booking_request.shott_booking_request.on_payment_request_authorized",
+		]
 	}
 }
 

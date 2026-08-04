@@ -1,0 +1,216 @@
+{
+ "actions": [],
+ "allow_bulk_edit": 1,
+ "allow_rename": 1,
+ "autoname": "SHBR-.####",
+ "creation": "2026-08-04 12:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_sgrg",
+  "company",
+  "customer_name",
+  "mobile_no",
+  "payment_status",
+  "column_break_qfvs",
+  "booking_date",
+  "no_of_persons",
+  "amount_per_person",
+  "total_amount",
+  "amended_from",
+  "section_break_fdut",
+  "bowling",
+  "laser_wars",
+  "column_break_rxri",
+  "arcade",
+  "virtual_reality",
+  "column_break_wxqz",
+  "go_karting",
+  "trampoline",
+  "section_break_kpjx",
+  "payment_url",
+  "qr_code",
+  "column_break_dmzp",
+  "image_ycyx"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_sgrg",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Shott Booking Request",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "mobile_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Mobile No.",
+   "options": "Phone",
+   "reqd": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "Unpaid",
+   "fieldname": "payment_status",
+   "fieldtype": "Select",
+   "label": "Payment Status",
+   "options": "\nUnpaid\nPaid"
+  },
+  {
+   "fieldname": "column_break_qfvs",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_fdut",
+   "fieldtype": "Section Break",
+   "label": "Activity"
+  },
+  {
+   "default": "0",
+   "fieldname": "bowling",
+   "fieldtype": "Check",
+   "label": "Bowling"
+  },
+  {
+   "default": "0",
+   "fieldname": "laser_wars",
+   "fieldtype": "Check",
+   "label": "Laser Wars"
+  },
+  {
+   "fieldname": "column_break_rxri",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "arcade",
+   "fieldtype": "Check",
+   "label": "Arcade"
+  },
+  {
+   "default": "0",
+   "fieldname": "virtual_reality",
+   "fieldtype": "Check",
+   "label": "Virtual Reality"
+  },
+  {
+   "fieldname": "column_break_wxqz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "go_karting",
+   "fieldtype": "Check",
+   "label": "Go-Karting"
+  },
+  {
+   "default": "0",
+   "fieldname": "trampoline",
+   "fieldtype": "Check",
+   "label": "Trampoline"
+  },
+  {
+   "fieldname": "no_of_persons",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "No of Persons",
+   "non_negative": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "booking_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Booking Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "amount_per_person",
+   "fieldtype": "Currency",
+   "label": "Amount Per Person"
+  },
+  {
+   "fieldname": "total_amount",
+   "fieldtype": "Currency",
+   "label": "Total Amount",
+   "non_negative": 1
+  },
+  {
+   "fieldname": "customer_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Customer Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_kpjx",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "payment_url",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Payment URL",
+   "read_only": 1
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company"
+  },
+  {
+   "fieldname": "qr_code",
+   "fieldtype": "Attach Image",
+   "hidden": 1,
+   "label": "QR Code"
+  },
+  {
+   "fieldname": "image_ycyx",
+   "fieldtype": "Image",
+   "options": "qr_code"
+  },
+  {
+   "fieldname": "column_break_dmzp",
+   "fieldtype": "Column Break"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-08-04 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Waterpark",
+ "name": "Shott Booking Request",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}
