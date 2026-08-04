@@ -45,12 +45,21 @@ def on_payment_authorized():
         # amount_paid = payment_entity.get("amount") / 100
         if description:
             words = description.split()
-            booking_id = next((word for word in words if word.startswith("WPBR")), None)
+            booking_id = next(
+                (word for word in words if word.startswith("WPBR") or word.startswith("SHBR")),
+                None,
+            )
             # invoice_id = description.get("sales_invoice")
-            try:
-                booking_doc = frappe.get_doc("Water Park Booking Request", booking_id)
-                booking_doc.payment_status = "Paid"
-                booking_doc.save(ignore_permissions=True)
-            
-            except Exception as e:
-                frappe.log_error(title="Booking ID not found", message=frappe.get_traceback())
+            if booking_id:
+                if booking_id.startswith("WPBR"):
+                    doctype = "Water Park Booking Request"
+                elif booking_id.startswith("SHBR"):
+                    doctype = "Shott Booking Request"
+
+                try:
+                    booking_doc = frappe.get_doc(doctype, booking_id)
+                    booking_doc.payment_status = "Paid"
+                    booking_doc.save(ignore_permissions=True)
+
+                except Exception as e:
+                    frappe.log_error(title="Booking ID not found", message=frappe.get_traceback())
