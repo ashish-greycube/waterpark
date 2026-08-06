@@ -3,29 +3,137 @@
 {% block title %}{{ _("Payment Success") }}{% endblock %}
 
 {%- block page_content -%}
-<div class='page-card'>
-	<div class='page-card-head'>
-		<span class='indicator green'>
-			{{ _("Success") }}</span>
+<div class='page-card payment-success-card'>
+	<div class='payment-success-icon'>
+		<svg viewBox="0 0 52 52" width="52" height="52">
+			<circle class="payment-success-icon-ring" cx="26" cy="26" r="24" fill="none" />
+			<path class="payment-success-icon-check" fill="none" d="M14 27l8 8 16-16" />
+		</svg>
 	</div>
-	<p>{{ payment_message or _("Your payment was successfully accepted") }}</p>
+	<h4 class="payment-success-title">{{ _("Payment Successful") }}</h4>
+	<p class="payment-success-message">{{ payment_message or _("Your payment was successfully accepted.") }}</p>
 	{% if not payment_message %}
-		<div>
-			<a
-			   href='{{ frappe.form_dict.redirect_to or "/" }}'
-			   class='btn btn-primary btn-sm'>
-				{{ _("Continue") }}
-			</a>
-		</div>
+	<div class="payment-success-actions">
+		<a href='{{ frappe.form_dict.redirect_to or "/" }}' class='btn btn-primary btn-sm'>
+			{{ _("Continue") }}
+		</a>
+	</div>
+	{% endif %}
+	{% if frappe.form_dict.redirect_to %}
+	<div class="payment-success-progress">
+		<div class="payment-success-progress-bar"></div>
+	</div>
+	<p class="payment-success-redirect-note">{{ _("Redirecting automatically...") }}</p>
 	{% endif %}
 </div>
 <style>
-{% include "templates/styles/card_style.css" %}
+	{
+		% include "templates/styles/card_style.css" %
+	}
+
+	.payment-success-card {
+		max-width: 400px;
+		padding: 40px 32px 32px;
+		text-align: center;
+		border-radius: var(--border-radius-lg, 14px);
+		box-shadow: var(--shadow-md);
+	}
+
+	.payment-success-icon {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin: 0 auto 20px;
+		width: 64px;
+		height: 64px;
+	}
+
+	.payment-success-icon-ring {
+		stroke: var(--green-500, #22c55e);
+		stroke-width: 2;
+		stroke-dasharray: 151;
+		stroke-dashoffset: 151;
+		animation: payment-success-ring 0.6s ease-out forwards;
+	}
+
+	.payment-success-icon-check {
+		stroke: var(--green-500, #22c55e);
+		stroke-width: 3;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+		stroke-dasharray: 34;
+		stroke-dashoffset: 34;
+		animation: payment-success-check 0.4s 0.5s ease-out forwards;
+	}
+
+	@keyframes payment-success-ring {
+		to {
+			stroke-dashoffset: 0;
+		}
+	}
+
+	@keyframes payment-success-check {
+		to {
+			stroke-dashoffset: 0;
+		}
+	}
+
+	.payment-success-title {
+		font-size: var(--text-xl);
+		font-weight: var(--weight-semibold);
+		margin-bottom: 8px;
+		color: var(--text-color);
+	}
+
+	.payment-success-message {
+		font-size: var(--font-size-sm);
+		color: var(--text-muted);
+		line-height: 1.5;
+		margin-bottom: 0;
+	}
+
+	.payment-success-actions {
+		margin-top: 24px;
+	}
+
+	.payment-success-actions .btn {
+		margin-top: 0;
+		min-width: 140px;
+	}
+
+	.payment-success-progress {
+		margin-top: 24px;
+		height: 4px;
+		border-radius: 2px;
+		background-color: var(--border-color);
+		overflow: hidden;
+	}
+
+	.payment-success-progress-bar {
+		height: 100%;
+		width: 0%;
+		border-radius: 2px;
+		background-color: var(--green-500, #22c55e);
+		animation: payment-success-progress 4s linear forwards;
+	}
+
+	@keyframes payment-success-progress {
+		to {
+			width: 100%;
+		}
+	}
+
+	.payment-success-redirect-note {
+		margin-top: 10px;
+		margin-bottom: 0;
+		font-size: var(--text-xs, 12px);
+		color: var(--text-light);
+	}
 </style>
 <script>
-	frappe.ready(function() {
-		if('{{ frappe.form_dict.redirect_to or "" }}'){
-			setTimeout(function(){
+	frappe.ready(function () {
+		if ('{{ frappe.form_dict.redirect_to or "" }}') {
+			setTimeout(function () {
 				window.location.href = '{{ frappe.form_dict.redirect_to }}';
 			}, 4000);
 		}
