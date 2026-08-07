@@ -184,6 +184,7 @@
    "fieldtype": "Column Break"
   },
   {
+   "allow_on_submit": 1,
    "default": "0",
    "fieldname": "whatsapp_confirmation_sent",
    "fieldtype": "Int",
@@ -196,7 +197,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-08-07 11:56:46.747275",
+ "modified": "2026-08-07 12:08:53.490137",
  "modified_by": "Administrator",
  "module": "Waterpark",
  "name": "Shott Booking Request",
