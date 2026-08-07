@@ -186,7 +186,7 @@
   {
    "default": "0",
    "fieldname": "whatsapp_confirmation_sent",
-   "fieldtype": "Check",
+   "fieldtype": "Int",
    "hidden": 1,
    "label": "Whatsapp Confirmation Sent?",
    "read_only": 1
@@ -196,7 +196,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-08-07 11:38:41.954000",
+ "modified": "2026-08-07 11:56:46.747275",
  "modified_by": "Administrator",
  "module": "Waterpark",
  "name": "Shott Booking Request",
