@@ -59,6 +59,7 @@ def on_payment_authorized():
                 try:
                     booking_doc = frappe.get_doc(doctype, booking_id)
                     booking_doc.payment_status = "Paid"
+                    booking_doc.whatsapp_confirmation_sent = 1
                     booking_doc.save(ignore_permissions=True)
 
                 except Exception as e:
