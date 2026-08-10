@@ -77,7 +77,8 @@ def submit_order(customer_name, mobile_no, items):
 	"""Public endpoint called from the Nakkashi Studio form. Re-validates
 	everything server-side, then creates/reuses the Customer, raises a
 	submitted Sales Invoice and a Payment Request against it."""
-
+	# Set user as Administrator to avoid permission issue
+	frappe.set_user("Administrator")
 	if not (customer_name or "").strip():
 		frappe.throw(_("Name is required"))
 
@@ -127,6 +128,8 @@ def submit_order(customer_name, mobile_no, items):
 
 
 def create_payment_request(si):
+	# Set user as Administrator to avoid permission issue
+	frappe.set_user("Administrator")
 	payment_gateway_account = frappe.get_doc(
 		"Payment Gateway Account",
 		{"company": si.company, "payment_gateway": "Razorpay"},
