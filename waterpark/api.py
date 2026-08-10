@@ -79,11 +79,30 @@ def on_payment_authorized():
                             # Already processed by an earlier delivery of this webhook.
                             frappe.db.commit()
                         else:
-                            payment_entry = get_payment_entry(doctype, booking_id)
-                            payment_entry.reference_no = payment_entity.get("id") or booking_id
-                            payment_entry.reference_date = nowdate()
-                            payment_entry.insert(ignore_permissions=True)
-                            payment_entry.submit()
+                            amount_paid = payment_entity.get("amount") / 100 
+                            pe = frappe.new_doc("Payment Entry") 
+                            pe.update({
+                                "payment_type": "Receive",
+                                "party_type": "Customer",
+                                "party": si.customer,
+                                "paid_amount": amount_paid,
+                                "received_amount": amount_paid,
+                                "paid_from" : "Debtors - AW",
+                                "paid_to": "Razorpay - AW",
+                                "paid_from_account_currency" : "INR",
+                                "paid_to_account_currency" : "INR",
+                                "reference_no": payment_entity.get("id"),
+                                "reference_date" : frappe.utils.today()
+                            })
+
+                            pe.append("references", {
+                                "reference_doctype": "Sales Invoice",
+                                "reference_name": si.name,
+                                "allocated_amount": amount_paid
+                            })
+
+                            pe.insert(ignore_permissions=True)
+                            pe.submit()
                             frappe.db.commit()
                     else:
                         booking_doc = frappe.get_doc(doctype, booking_id)
