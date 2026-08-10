@@ -2,6 +2,8 @@ import frappe
 import json
 import hmac
 import hashlib
+from frappe.utils import nowdate
+from erpnext.accounts.doctype.payment_entry.payment_entry import get_payment_entry
 
 # ==================================================================================
 # Webhook Callback Function
@@ -46,7 +48,11 @@ def on_payment_authorized():
         if description:
             words = description.split()
             booking_id = next(
-                (word for word in words if word.startswith("WPBR") or word.startswith("SHBR")),
+                (
+                    word
+                    for word in words
+                    if word.startswith("WPBR") or word.startswith("SHBR") or word.startswith("ACC-SINV")
+                ),
                 None,
             )
             # invoice_id = description.get("sales_invoice")
@@ -55,22 +61,42 @@ def on_payment_authorized():
                     doctype = "Water Park Booking Request"
                 elif booking_id.startswith("SHBR"):
                     doctype = "Shott Booking Request"
+                elif booking_id.startswith("ACC-SINV"):
+                    doctype = "Sales Invoice"
 
                 try:
                     # Lock the row so concurrent/retried webhook deliveries for the
-                    # same payment can't race past the payment_status check below.
+                    # same payment can't race past the checks below.
                     frappe.db.get_value(doctype, booking_id, "name", for_update=True)
-                    booking_doc = frappe.get_doc(doctype, booking_id)
 
-                    if booking_doc.payment_status == "Paid":
-                        # Already processed by an earlier delivery of this webhook;
-                        # skip so whatsapp_confirmation_sent doesn't get bumped past 1.
-                        frappe.db.commit()
+                    if doctype == "Sales Invoice":
+                        # Nakkashi Studio orders are plain Sales Invoices, not a
+                        # custom booking doctype -- there's no payment_status field
+                        # to flip, so mark it paid by raising a Payment Entry.
+                        si = frappe.get_doc(doctype, booking_id)
+
+                        if si.outstanding_amount <= 0:
+                            # Already processed by an earlier delivery of this webhook.
+                            frappe.db.commit()
+                        else:
+                            payment_entry = get_payment_entry(doctype, booking_id)
+                            payment_entry.reference_no = payment_entity.get("id") or booking_id
+                            payment_entry.reference_date = nowdate()
+                            payment_entry.insert(ignore_permissions=True)
+                            payment_entry.submit()
+                            frappe.db.commit()
                     else:
-                        booking_doc.payment_status = "Paid"
-                        booking_doc.whatsapp_confirmation_sent = 1
-                        booking_doc.save(ignore_permissions=True)
-                        frappe.db.commit()
+                        booking_doc = frappe.get_doc(doctype, booking_id)
+
+                        if booking_doc.payment_status == "Paid":
+                            # Already processed by an earlier delivery of this webhook;
+                            # skip so whatsapp_confirmation_sent doesn't get bumped past 1.
+                            frappe.db.commit()
+                        else:
+                            booking_doc.payment_status = "Paid"
+                            booking_doc.whatsapp_confirmation_sent = 1
+                            booking_doc.save(ignore_permissions=True)
+                            frappe.db.commit()
 
                 except Exception as e:
                     frappe.log_error(title="Booking ID not found", message=frappe.get_traceback())
