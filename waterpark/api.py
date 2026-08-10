@@ -92,7 +92,9 @@ def on_payment_authorized():
                                 "paid_from_account_currency" : "INR",
                                 "paid_to_account_currency" : "INR",
                                 "reference_no": payment_entity.get("id"),
-                                "reference_date" : frappe.utils.today()
+                                "reference_date" : frappe.utils.today(),
+                                "source_exchange_rate": 1,
+                                "target_exchange_rate": 1,
                             })
 
                             pe.append("references", {
