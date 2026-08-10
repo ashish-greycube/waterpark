@@ -57,10 +57,20 @@ def on_payment_authorized():
                     doctype = "Shott Booking Request"
 
                 try:
+                    # Lock the row so concurrent/retried webhook deliveries for the
+                    # same payment can't race past the payment_status check below.
+                    frappe.db.get_value(doctype, booking_id, "name", for_update=True)
                     booking_doc = frappe.get_doc(doctype, booking_id)
-                    booking_doc.payment_status = "Paid"
-                    booking_doc.whatsapp_confirmation_sent = booking_doc.whatsapp_confirmation_sent + 1 if booking_doc.whatsapp_confirmation_sent else 1
-                    booking_doc.save(ignore_permissions=True)
+
+                    if booking_doc.payment_status == "Paid":
+                        # Already processed by an earlier delivery of this webhook;
+                        # skip so whatsapp_confirmation_sent doesn't get bumped past 1.
+                        frappe.db.commit()
+                    else:
+                        booking_doc.payment_status = "Paid"
+                        booking_doc.whatsapp_confirmation_sent = 1
+                        booking_doc.save(ignore_permissions=True)
+                        frappe.db.commit()
 
                 except Exception as e:
                     frappe.log_error(title="Booking ID not found", message=frappe.get_traceback())
