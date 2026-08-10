@@ -95,6 +95,7 @@ def on_payment_authorized():
                                 "reference_date" : frappe.utils.today(),
                                 "source_exchange_rate": 1,
                                 "target_exchange_rate": 1,
+                                "company": "AquaFun Waterpark",
                             })
 
                             pe.append("references", {
@@ -105,6 +106,10 @@ def on_payment_authorized():
 
                             pe.insert(ignore_permissions=True)
                             pe.submit()
+
+                            si.custom_whatsapp_confirmation_sent = 1
+                            si.save(ignore_permissions=True)
+
                             frappe.db.commit()
                     else:
                         booking_doc = frappe.get_doc(doctype, booking_id)
