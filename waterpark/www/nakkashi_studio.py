@@ -109,7 +109,7 @@ def submit_order(customer_name, mobile_no, items):
 			"customer": customer,
 			"company": erpnext.get_default_company(),
 			"items": si_items,
-			"custom_mobile_number": "91{0}".format(mobile_no.strip())
+			"custom_mobile_number": f"91{0}".format(mobile_no.strip())
 		}
 	)
 	si.set_missing_values()

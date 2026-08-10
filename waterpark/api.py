@@ -107,8 +107,9 @@ def on_payment_authorized():
                             pe.insert(ignore_permissions=True)
                             pe.submit()
 
-                            si.custom_whatsapp_confirmation_sent = 1
-                            si.save(ignore_permissions=True)
+                            sales_invoice = frappe.get_doc("Sales Invoice", si.name)
+                            sales_invoice.custom_whatsapp_confirmation_sent = 1
+                            sales_invoice.save(ignore_permissions=True)
 
                             frappe.db.commit()
                     else:
